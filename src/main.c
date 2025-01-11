@@ -42,7 +42,8 @@ static int	ft_arraylen(char **array)
 	return (i);
 }
 
-static void	fill_stack_a(t_push_swap *ps, int argc, char **argv)
+static void	fill_stack_a(t_push_swap *ps, int argc, char **argv,
+			int is_allocated)
 {
 	int	i;
 	int	*num;
@@ -58,9 +59,8 @@ static void	fill_stack_a(t_push_swap *ps, int argc, char **argv)
 		num = malloc(sizeof(int));
 		if (!num)
 		{
-			free_stack(ps->stack_a);
-			free_stack(ps->stack_b);
 			ft_printf("Error\nAllocation failed\n");
+			free_stack_and_argv(ps->stack_a, ps->stack_b, argv, is_allocated);
 			exit(EXIT_FAILURE);
 		}
 		*num = ft_atoi(argv[i]);
@@ -87,20 +87,24 @@ static int	is_sorted(t_stack *stack)
 int	main(int argc, char **argv)
 {
 	t_push_swap	push_swap;
+	t_context	ctx;
+	int			is_allocated;
 
+	is_allocated = 0;
 	if (argc == 2)
-		argv = ft_split(argv[1], ' ');
-	check_input(argc, argv);
-	init_stacks(&push_swap);
-	fill_stack_a(&push_swap, argc, argv);
-	if (is_sorted(push_swap.stack_a))
 	{
-		free_stack(push_swap.stack_a);
-		free_stack(push_swap.stack_b);
-		return (0);
+		argv = ft_split(argv[1], ' ');
+		is_allocated = 1;
 	}
-	turk_sort(&push_swap);
-	free_stack(push_swap.stack_a);
-	free_stack(push_swap.stack_b);
-	return (0);
+	ctx.argv = argv;
+	ctx.is_allocated = is_allocated;
+	check_input(argc, argv, is_allocated);
+	init_stacks(&push_swap);
+	fill_stack_a(&push_swap, argc, argv, is_allocated);
+	if (is_sorted(push_swap.stack_a))
+		return (free_stack_and_argv(push_swap.stack_a, push_swap.stack_b,
+				argv, is_allocated), 0);
+	turk_sort(&push_swap, &ctx);
+	return (free_stack_and_argv(push_swap.stack_a, push_swap.stack_b,
+			argv, is_allocated), 0);
 }

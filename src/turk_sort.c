@@ -54,12 +54,12 @@ static void	place_min_number_on_top_a(t_push_swap *ps)
 	}
 }
 
-void	turk_sort(t_push_swap *ps)
+void	turk_sort(t_push_swap *ps, t_context *ctx)
 {
 	int	num_to_push;
 
 	update_stacks(ps);
-	presort(ps);
+	presort(ps, ctx);
 	update_stacks(ps);
 	sort_three_numbers_a(ps->stack_a);
 	while (ps->stack_b->size > 0)

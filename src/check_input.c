@@ -85,7 +85,7 @@ static int	ft_isnumber(char *str)
 	return (1);
 }
 
-void	check_input(int argc, char **argv)
+void	check_input(int argc, char **argv, int is_allocated)
 {
 	int	i;
 
@@ -98,7 +98,11 @@ void	check_input(int argc, char **argv)
 	{
 		if (!ft_isnumber(argv[i]) || !ft_isint(argv[i]) || !is_unique(argv,
 				argv[i], i))
+		{
+			if (is_allocated && argv)
+				free_argv(argv);
 			exit(EXIT_FAILURE);
+		}
 		i++;
 	}
 }

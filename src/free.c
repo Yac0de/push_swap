@@ -26,3 +26,27 @@ void	free_stack(t_stack *stack)
 	}
 	free(stack);
 }
+
+void	free_argv(char **argv)
+{
+	char	**tmp;
+
+	**tmp = argv;
+	while (*tmp)
+	{
+		free(*tmp);
+		tmp++;
+	}
+	free(argv);
+}
+
+void	free_stack_and_argv(t_stack *stack_a, t_stack *stack_b, char **argv,
+		int is_allocated)
+{
+	if (stack_a)
+		free_stack(stack_a);
+	if (stack_b)
+		free_stack(stack_b);
+	if (is_allocated && argv)
+		free_argv(argv);
+}

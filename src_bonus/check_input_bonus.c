@@ -85,20 +85,22 @@ static int	ft_isnumber_b(char *str)
 	return (1);
 }
 
-void	check_input_b(int argc, char **argv)
+void	check_input_b(int argc, char **argv, int is_allocated)
 {
 	int	i;
 
 	i = 1;
-	if (argc == 2)
-		i = 0;
-	if (argc < 2)
-		exit(EXIT_FAILURE);
+	if (argc < 2 || (argc == 2 && argv[0][0] == '\0'))
+		return (free_stack_and_argv_b(NULL, NULL, argv, is_allocated),
+			ft_printf("Error\n"), exit(EXIT_FAILURE));
 	while (argv[i])
 	{
 		if (!ft_isnumber_b(argv[i]) || !ft_isint_b(argv[i])
 			|| !is_unique_b(argv, argv[i], i))
+		{
+			free_stack_and_argv_b(NULL, NULL, argv, is_allocated);
 			exit(EXIT_FAILURE);
+		}
 		i++;
 	}
 }

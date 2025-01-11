@@ -32,7 +32,8 @@ static void	sort(int *array, int size)
 	}
 }
 
-static void	find_tertiles(t_stack *stack, int *f_tertile, int *s_tertile)
+static void	find_tertiles(t_stack *stack, int *f_tertile, int *s_tertile,
+			t_context *ctx)
 {
 	int				*array;
 	int				i;
@@ -41,8 +42,8 @@ static void	find_tertiles(t_stack *stack, int *f_tertile, int *s_tertile)
 	array = (int *)malloc(stack->size * sizeof(int));
 	if (!array)
 	{
-		free_stack(stack);
 		ft_printf("Error\nAllocation failed\n");
+		free_stack_and_argv(stack, NULL, ctx->argv, ctx->is_allocated);
 		exit(EXIT_FAILURE);
 	}
 	i = 0;
@@ -102,7 +103,7 @@ static int	find_value_lowest_than_second_tertile(t_stack *stack, int s_tertile)
 	return (0);
 }
 
-void	presort(t_push_swap *ps)
+void	presort(t_push_swap *ps, t_context *ctx)
 {
 	int	current_value;
 	int	max3;
@@ -110,7 +111,7 @@ void	presort(t_push_swap *ps)
 	int	second_tertile;
 
 	find_third_max(ps->stack_a, &max3);
-	find_tertiles(ps->stack_a, &first_tertile, &second_tertile);
+	find_tertiles(ps->stack_a, &first_tertile, &second_tertile, ctx);
 	while (find_value_lowest_than_second_tertile(ps->stack_a,
 			second_tertile) && ps->stack_a->size > 3)
 	{

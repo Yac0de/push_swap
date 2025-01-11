@@ -14,7 +14,12 @@
 # define PUSH_SWAP_H
 
 # include "../libft/inc/libft.h"
-# include <stdio.h>
+
+typedef struct s_context
+{
+	char				**argv;
+	int					is_allocated;
+}						t_context;
 
 typedef struct s_rotation_info
 {
@@ -46,12 +51,12 @@ typedef struct s_push_swap
 }						t_push_swap;
 
 // MAIN
-void					check_input(int argc, char **argv);
-void					turk_sort(t_push_swap *ps);
+void					check_input(int argc, char **argv, int is_allocated);
+void					turk_sort(t_push_swap *ps, t_context *ctx);
 
 // TURK_SORT
 void					update_stacks(t_push_swap *ps);
-void					presort(t_push_swap *ps);
+void					presort(t_push_swap *ps, t_context *ctx);
 int						find_min_cost_number(t_push_swap *ps);
 void					move(t_push_swap *ps, int num_to_push);
 
@@ -82,14 +87,16 @@ t_stack_node			*ft_stacknew(int value);
 int						ft_stacksize(t_stack *stack);
 
 // FREE
-void					free_stack(t_stack *stack);
+void					free_stack_and_argv(t_stack *stack_a, t_stack *stack_b,
+							char **argv, int is_allocated);
+void					free_argv(char **argv);
 
 //////////////////////////////////////////////////////////////////
 
 // BONUS
 
 // MAIN BONUS
-void					check_input_b(int argc, char **argv);
+void					check_input_b(int argc, char **argv, int is_allocated);
 
 // OPERATIONS BONUS
 void					swap_b(t_stack *stack);
@@ -116,6 +123,8 @@ int						ft_stacksize_b(t_stack *stack);
 
 // FREE BONUS
 void					free_stack_b(t_stack *stack);
+void					free_stack_and_argv_b(t_stack *stack_a,
+							t_stack *stack_b, char **argv, int is_allocated);
 void					free_argv_b(char **argv);
 
 // END MESSAGE

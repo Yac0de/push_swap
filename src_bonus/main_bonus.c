@@ -42,7 +42,8 @@ static int	ft_arraylen_b(char **array)
 	return (i);
 }
 
-static void	fill_stack_a_b(t_push_swap *ps, int argc, char **argv)
+static void	fill_stack_a_b(t_push_swap *ps, int argc, char **argv,
+			int is_allocated)
 {
 	int	i;
 	int	*num;
@@ -58,9 +59,8 @@ static void	fill_stack_a_b(t_push_swap *ps, int argc, char **argv)
 		num = malloc(sizeof(int));
 		if (!num)
 		{
-			free_stack_b(ps->stack_a);
-			free_stack_b(ps->stack_b);
 			ft_printf("Error\nAllocation failed\n");
+			free_stack_and_argv_b(ps->stack_a, ps->stack_b, argv, is_allocated);
 			exit(EXIT_FAILURE);
 		}
 		*num = ft_atoi(argv[i]);
@@ -73,17 +73,24 @@ static void	fill_stack_a_b(t_push_swap *ps, int argc, char **argv)
 int	main(int argc, char **argv)
 {
 	t_push_swap	push_swap;
+	int			is_allocated;
 
+	is_allocated = 0;
 	if (argc == 2)
+	{
 		argv = ft_split(argv[1], ' ');
-	check_input_b(argc, argv);
+		is_allocated = 1;
+		if (!argv || !argv[0])
+			return (free_stack_and_argv_b(NULL, NULL, argv, is_allocated),
+				ft_printf("Error\n"), 1);
+	}
+	check_input_b(argc, argv, is_allocated);
 	init_stacks_b(&push_swap);
-	fill_stack_a_b(&push_swap, argc, argv);
-	if (argc == 2)
+	fill_stack_a_b(&push_swap, argc, argv, is_allocated);
+	if (is_allocated)
 		free_argv_b(argv);
 	get_instruction_b(&push_swap);
 	end_message_b(push_swap.stack_a, push_swap.stack_b);
-	free_stack_b(push_swap.stack_a);
-	free_stack_b(push_swap.stack_b);
-	return (0);
+	return (free_stack_and_argv_b(push_swap.stack_a, push_swap.stack_b,
+			NULL, 0), 0);
 }
